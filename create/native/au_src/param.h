@@ -48,10 +48,25 @@
 
 #define F00_NORM (BA * BA * D * (BETA - 1))
 
-/* #define TG "18361799375294707477250048" */
+/* TG escalado por cantidad de llaves (valores de main/).
+ * Se selecciona solo segun BETA. BETA=10 es el default de la app Rust. */
 #define TG_COEFF_0 0
+#if BETA == 10LL
 #define TG_COEFF_1 595591168
 #define TG_COEFF_2 995395
+#elif BETA == 100LL
+#define TG_COEFF_1 2365587456
+#define TG_COEFF_2 1001492
+#elif BETA == 500LL
+#define TG_COEFF_1 3238002688
+#define TG_COEFF_2 5007462
+#elif BETA == 1000LL
+#define TG_COEFF_1 2181038080
+#define TG_COEFF_2 10014925
+#else
+#define TG_COEFF_1 595591168
+#define TG_COEFF_2 995395
+#endif
 #define TG_COEFF_3 0
 
 #define BBIG_HAT 63307776LL
