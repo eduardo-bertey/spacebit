@@ -12,7 +12,9 @@
 #define CRYPTO_BYTES 32
 
 #define B 1LL
+#ifndef BETA
 #define BETA 100LL
+#endif
 #define R 64LL
 #define N 18LL
 #define M 38LL
