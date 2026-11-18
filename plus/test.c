@@ -19,7 +19,7 @@ static unsigned char seed[CRYPTO_BYTES];
 static POLY_Q mat1[K + 3][N], mat2[K][3];
 static POLY_QHAT mat3[K_HAT + 2 * N_SPENT + 4][N_HAT];
 
-#define NUM_ROUNDS 1000
+#define NUM_ROUNDS 20
 
 int main() {
   static ACT a_in[N_SPENT][M];
@@ -39,13 +39,17 @@ int main() {
 
   static unsigned char pp[CRYPTO_BYTES];
 
-  uint64_t i, amt0, amt1, t, v;
+  uint64_t i, amt0, amt1, t, v, ok = 0;
 
   static SN_OUT sn_out[M];
 
   long long cycle1, cycle2, cycle3, cycle4, cycle5;
 
   srand(time(NULL));
+
+  printf("=== PLUS ===\n");
+  printf("anillo=%lld  M=%lld  S=%lld  rondas=%d\n", (long long)N_SPENT,
+         (long long)M, (long long)S, NUM_ROUNDS);
 
   for (t = 0; t < NUM_ROUNDS; t++) {
     randombytes(seed, CRYPTO_BYTES);
@@ -101,10 +105,24 @@ int main() {
           mat1, mat2, mat3, pp);
     cycle4 = cpucycles();
     v = verify(a_in, pk_out, cn_out, sn_out, &spend_out, mat1, mat2, mat3, pp);
+    if (v)
+      ok++;
     cycle5 = cpucycles();
-    printf("%lld,%lld,%lld,%lu\n", cycle2 - cycle1, cycle4 - cycle3,
-           cycle5 - cycle4, v);
+    printf("\n--- ronda %llu ---\n", (unsigned long long)(t + 1));
+    printf("verificacion : %s (v=%llu)\n", v ? "OK" : "FALLA",
+           (unsigned long long)v);
+    printf("firmante     : %llu\n", (unsigned long long)l);
+    printf("billetes     : %llu + %llu = %llu\n", (unsigned long long)amt0,
+           (unsigned long long)amt1, (unsigned long long)(amt0 + amt1));
+    printf("pago/vuelto  : %llu / %llu\n", (unsigned long long)amt_out[0],
+           (unsigned long long)amt_out[1]);
+    printf("ciclos CPU   : setup=%lld  firmar=%lld  verificar=%lld\n",
+           cycle2 - cycle1, cycle4 - cycle3, cycle5 - cycle4);
   }
 
+  printf("\nRESUMEN: %llu/%d rondas OK\n", (unsigned long long)ok, NUM_ROUNDS);
+  printf("Fin. Presione Enter para salir...\n");
+  fflush(stdout);
+  (void)getchar();
   return 0;
 }

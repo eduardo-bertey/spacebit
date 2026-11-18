@@ -43,7 +43,7 @@ int main() {
   static SPEND_OUT out;
   static POLY_Q cn_out[S][N], s;
 
-  uint64_t i, amt, t, v;
+  uint64_t i, amt, t, v, ok = 0;
 
   long long cycle1, cycle2, cycle3, cycle4, cycle5, cycle6, cycle7;
 
@@ -106,6 +106,8 @@ int main() {
           t2);
     cycle5 = cpucycles();
     v = verify(a_in, pk_out, cn_out, &out, &s, g, h, g_hat, t0, t1, t2);
+    if (v)
+      ok++;
     cycle6 = cpucycles();
     audit(&l_au, amt_out_au, &out, g_hat, td);
     cycle7 = cpucycles();
@@ -128,7 +130,8 @@ int main() {
            cycle6 - cycle5, cycle7 - cycle6);
   }
 
-  printf("\nFin. Presione Enter para salir...\n");
+  printf("\nRESUMEN: %llu/%d rondas OK\n", (unsigned long long)ok, NUM_ROUNDS);
+  printf("Fin. Presione Enter para salir...\n");
   fflush(stdout);
   (void)getchar();
   return 0;
