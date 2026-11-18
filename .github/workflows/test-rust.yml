@@ -1,7 +1,8 @@
 name: Test Rust (manual)
 
-# Los workflows de build NO ejecutan tests. Este solo corre cuando se
-# dispara a mano para verificar el crate.
+# Los workflows de build NO ejecutan tests. Este se dispara a mano: compila
+# los binarios de test para Windows y los sube como artifact para correrlos
+# en local (no los ejecuta en la nube).
 on:
   workflow_dispatch:
 
@@ -10,10 +11,23 @@ permissions:
 
 jobs:
   test:
-    name: cargo test (create/)
+    name: Compilar tests Rust para Windows
     runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
     steps:
       - uses: actions/checkout@v4
       - uses: dtolnay/rust-toolchain@stable
-      - name: cargo test
-        run: cargo test --manifest-path create/Cargo.toml -- --test-threads=1
+        with:
+          targets: x86_64-pc-windows-gnu
+      - name: Instalar compilador MinGW cruzado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64
+      - name: cargo test --no-run (target Windows GNU)
+        run: cargo test --no-run --target x86_64-pc-windows-gnu --manifest-path create/Cargo.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rust-tests-win
+          path: create/target/x86_64-pc-windows-gnu/debug/deps/v4-*.exe
+          if-no-files-found: error
