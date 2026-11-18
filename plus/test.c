@@ -123,6 +123,33 @@ int main() {
              cycle4 - cycle3, cycle5 - cycle4);
   }
 
+  /* Pruebas del Plus dentro del MISMO exe: serial a cero y prueba alterada. */
+  printf("\n=== PRUEBAS PLUS (mismo exe) ===\n");
+  {
+    uint64_t v_sn, v_falso, k;
+    static SN_OUT sn_guardado[M];
+    static SPEND_OUT out_falso;
+
+    v = verify(a_in, pk_out, cn_out, sn_out, &spend_out, mat1, mat2, mat3, pp);
+    printf("ronda honesta       : v=%llu\n", (unsigned long long)v);
+
+    memcpy(sn_guardado, sn_out, sizeof(sn_guardado));
+    memset(sn_out, 0, sizeof(sn_out));
+    v_sn = verify(a_in, pk_out, cn_out, sn_out, &spend_out, mat1, mat2, mat3,
+                  pp);
+    memcpy(sn_out, sn_guardado, sizeof(sn_guardado));
+    printf("serial revelado cero: v=%llu %s\n", (unsigned long long)v_sn,
+           v_sn ? "ACEPTO (mal)" : "rechazado (bien)");
+
+    memcpy(&out_falso, &spend_out, sizeof(SPEND_OUT));
+    out_falso.z[0].poly[0] += 1;
+    v_falso = verify(a_in, pk_out, cn_out, sn_out, &out_falso, mat1, mat2, mat3,
+                     pp);
+    printf("prueba alterada     : v=%llu %s\n", (unsigned long long)v_falso,
+           v_falso ? "ACEPTO (mal)" : "rechazado (bien)");
+    (void)k;
+  }
+
   printf("\nRESUMEN: %llu/%d rondas OK\n", (unsigned long long)ok, NUM_ROUNDS);
   printf("ciclos promedio: setup=%lld  firmar=%lld  verificar=%lld\n",
          acu_setup / NUM_ROUNDS, acu_firmar / NUM_ROUNDS,
