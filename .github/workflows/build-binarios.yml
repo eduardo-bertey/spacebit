@@ -83,5 +83,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: mil-llaves
-          path: artifacts/*_1k.exe
+          path: |
+            artifacts/*_1k.exe
+            artifacts/falsificacion_rango_alto.exe
           if-no-files-found: error
