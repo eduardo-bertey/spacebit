@@ -19,7 +19,7 @@ static unsigned char seed[CRYPTO_BYTES];
 static POLY_Q mat1[K + 3][N], mat2[K][3];
 static POLY_QHAT mat3[K_HAT + 2 * N_SPENT + 4][N_HAT];
 
-#define NUM_ROUNDS 20
+#define NUM_ROUNDS 1000
 
 int main() {
   static ACT a_in[N_SPENT][M];
@@ -44,6 +44,7 @@ int main() {
   static SN_OUT sn_out[M];
 
   long long cycle1, cycle2, cycle3, cycle4, cycle5;
+  long long acu_setup = 0, acu_firmar = 0, acu_verificar = 0;
 
   srand(time(NULL));
 
@@ -108,19 +109,24 @@ int main() {
     if (v)
       ok++;
     cycle5 = cpucycles();
-    printf("\n--- ronda %llu ---\n", (unsigned long long)(t + 1));
-    printf("verificacion : %s (v=%llu)\n", v ? "OK" : "FALLA",
-           (unsigned long long)v);
-    printf("firmante     : %llu\n", (unsigned long long)l);
-    printf("billetes     : %llu + %llu = %llu\n", (unsigned long long)amt0,
-           (unsigned long long)amt1, (unsigned long long)(amt0 + amt1));
-    printf("pago/vuelto  : %llu / %llu\n", (unsigned long long)amt_out[0],
-           (unsigned long long)amt_out[1]);
-    printf("ciclos CPU   : setup=%lld  firmar=%lld  verificar=%lld\n",
-           cycle2 - cycle1, cycle4 - cycle3, cycle5 - cycle4);
+    acu_setup += cycle2 - cycle1;
+    acu_firmar += cycle4 - cycle3;
+    acu_verificar += cycle5 - cycle4;
+
+    /* una linea por ronda, con etiquetas; progreso cada 100 */
+    if ((t + 1) % 100 == 0 || t + 1 == NUM_ROUNDS)
+      printf("ronda %4llu/%d  v=%llu  firmante=%llu  pago=%llu vuelto=%llu  "
+             "ciclos(setup/firmar/verificar)=%lld/%lld/%lld\n",
+             (unsigned long long)(t + 1), NUM_ROUNDS, (unsigned long long)v,
+             (unsigned long long)l, (unsigned long long)amt_out[0],
+             (unsigned long long)amt_out[1], cycle2 - cycle1,
+             cycle4 - cycle3, cycle5 - cycle4);
   }
 
   printf("\nRESUMEN: %llu/%d rondas OK\n", (unsigned long long)ok, NUM_ROUNDS);
+  printf("ciclos promedio: setup=%lld  firmar=%lld  verificar=%lld\n",
+         acu_setup / NUM_ROUNDS, acu_firmar / NUM_ROUNDS,
+         acu_verificar / NUM_ROUNDS);
   printf("Fin. Presione Enter para salir...\n");
   fflush(stdout);
   (void)getchar();
