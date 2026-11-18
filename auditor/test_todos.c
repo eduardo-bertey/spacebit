@@ -82,7 +82,7 @@ static uint64_t verificar(SPEND_OUT *prueba, POLY_Q *serial) {
 }
 
 static void prueba_honesta(void) {
-  uint64_t t, l, l_au, amt_au[S], ok = 0;
+  uint64_t t, l, l_au, amt_au[S], ok = 0, v;
 
   printf("\n=== 1. RONDA HONESTA + AUDITORIA ===\n");
   for (t = 0; t < RONDAS_HONESTAS; t++) {
