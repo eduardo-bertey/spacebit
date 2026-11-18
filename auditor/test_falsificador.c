@@ -102,9 +102,8 @@ int main(int argc, char **argv) {
 
       switch (estr) {
       case 0: /* serial "alto" pero distinto de cero: el parche no lo toca */
-        for (i = 0; i < M_SPENT; i++)
-          for (j = 0; j < D; j++)
-            s_try[i].poly[j] = valor_alto((uint64_t)Q - 1);
+        for (j = 0; j < D; j++)
+          s_try.poly[j] = valor_alto((uint64_t)Q - 1);
         break;
       case 1: /* respuestas zc cerca del tope de norma */
         for (i = 0; i < M; i++)
