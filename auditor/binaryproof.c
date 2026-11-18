@@ -19,12 +19,12 @@
 /* from Spend-I, v is constant 2*(beta+r-1+S*r) */
 void binaryproof(POLY_Q *ra, POLY_Q *rb, POLY_QBIG *a, POLY_QBIG *b,
                  BINARYPROOF_IN *in, const POLY_QBIG g_hat[][N_HAT]) {
-  POLY_QBIG ra_qbig[M_HAT], rb_qbig[M_HAT];
+  static POLY_QBIG ra_qbig[M_HAT], rb_qbig[M_HAT];
 
-  uint64_t bits[V_HAT >> 1];
+  static uint64_t bits[V_HAT >> 1];
   uint64_t *bits_head = bits;
 
-  POLY_QBIG a_ntt[V_HAT >> 1], d_ntt[V_HAT >> 1];
+  static POLY_QBIG a_ntt[V_HAT >> 1], d_ntt[V_HAT >> 1];
   POLY_QBIG *a_ntt_head = a_ntt, *d_ntt_head = d_ntt;
 
   uint64_t i, j, k, i_star;
