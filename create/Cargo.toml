@@ -18,3 +18,11 @@ path = "src/lib.rs"
 [[bin]]
 name = "matrict_rust_app"
 path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+debug = false

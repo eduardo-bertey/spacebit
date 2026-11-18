@@ -29,8 +29,15 @@ fn main() {
         .include(&au)
         .include(&include)
         .include(&native)
-        .flag_if_supported("-O2")
-        .flag_if_supported("-maes");
+        .opt_level(3)
+        .debug(false)
+        .define("NDEBUG", None)
+        .flag_if_supported("-maes")
+        .flag_if_supported("-mfma");
+
+    if env::var("CARGO_CFG_TARGET_ENV").as_deref() != Ok("msvc") {
+        println!("cargo:rustc-link-arg=-s"); // strip simbolos del binario final
+    }
 
     // Fuentes Au menos test.c (tiene main) y randombytes.c (usa /dev/urandom;
     // se sustituye por la version portable de test/).

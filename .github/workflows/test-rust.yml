@@ -1,0 +1,19 @@
+name: Test Rust (manual)
+
+# Los workflows de build NO ejecutan tests. Este solo corre cuando se
+# dispara a mano para verificar el crate.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test (create/)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: cargo test
+        run: cargo test --manifest-path create/Cargo.toml -- --test-threads=1
