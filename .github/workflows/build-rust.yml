@@ -11,27 +11,24 @@ permissions:
 jobs:
   rust:
     name: MatRiCT-Au Rust - compilar .exe
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     env:
       CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
-
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: mingw-w64-x86_64-gcc
 
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: x86_64-pc-windows-gnu
 
-      # build.rs compila los C con cc. No se ejecuta ningun test.
-      - name: cargo build --release (target GNU)
+      - name: Instalar compilador MinGW cruzado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64
+
+      # build.rs compila los C con cc (usando x86_64-w64-mingw32-gcc).
+      # No se ejecuta ningun test.
+      - name: cargo build --release (target Windows GNU)
         run: cargo build --release --target x86_64-pc-windows-gnu --manifest-path create/Cargo.toml
 
       - name: Listar (NO ejecutar) el binario
