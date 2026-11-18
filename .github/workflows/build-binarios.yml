@@ -75,7 +75,7 @@ jobs:
           update: true
           install: mingw-w64-x86_64-gcc
       - name: au_1k.exe
-        run: bash test/build/build.sh auditor test/au_1k_1vuelta.c au_1k.exe -DBETA=1000
+        run: bash test/build/build.sh auditor test/au_1k_1vuelta.c au_1k.exe -DBETA=1000 -Wl,--stack,67108864
       - name: plus_1k.exe
         run: bash test/build/build.sh plus test/plus_1k_1vuelta.c plus_1k.exe -DN_SPENT=1000
       - uses: actions/upload-artifact@v4
