@@ -39,3 +39,29 @@ jobs:
           name: rust-binario
           path: create/target/x86_64-pc-windows-gnu/release/matrict_rust_app.exe
           if-no-files-found: error
+
+  plus_rust:
+    name: MatRiCT-Plus Rust - compilar .exe
+    runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      - name: Instalar compilador MinGW cruzado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64
+
+      - name: cargo build --release (target Windows GNU)
+        run: cargo build --release --target x86_64-pc-windows-gnu --manifest-path create_plus/Cargo.toml
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plus-rust-binario
+          path: create_plus/target/x86_64-pc-windows-gnu/release/matrict_plus_app.exe
+          if-no-files-found: error

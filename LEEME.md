@@ -6,6 +6,7 @@
 auditor/    fuentes C del Au con el parche imagen-cero y sus tests
 plus/       fuentes C del Plus (BG_0 = 37162531*N/50) y tests del serial
 create/     app Rust que embebe al Au por FFI (con sus propios native/)
+create_plus/ app Rust que embebe al Plus por FFI (shim + tests)
 reportes/   informes
 test/       build.sh + RNG portable
 .github/    workflows: solo compilan, no ejecutan tests
@@ -26,14 +27,19 @@ Dos variantes nomas: **auditor** y **plus**. Un `.exe` por variante.
 
 - `build-binarios.yml`: `auditor.exe` y `plus.exe` (MSYS2/MinGW), subidos
   como artifacts separados.
-- `build-rust.yml`: `cargo build --release` en `create/`, sube el binario.
+- `build-rust.yml`: `cargo build --release` en `create/` y `create_plus/`, sube
+  `rust-binario` y `plus-rust-binario`.
+- `test-rust.yml`: manual; compila los `.exe` de test de ambos crates
+  (`rust-tests-win` y `plus-rust-tests-win`) sin ejecutarlos en la nube.
 
 ## Tests
 
 - `auditor/test_firma_falsa.c`: modos honesto, pago falso, fuera de rango,
   clave falsa, barrido de montos y monto falso.
 - `plus/`: `test.c`, `tp1.c`, `keygen_zero.c`.
-- `create/tests/v4.rs`: tests Rust de ronda, auditoría, montos, texto
-  alterado, serial cero, firma falsa y firmante fuera del anillo.
+- `create/tests/v4.rs`: tests Rust del Au (ronda, auditoría, montos, texto
+  alterado, serial cero, firma falsa y firmante fuera del anillo).
+- `create_plus/tests/plus.rs`: tests Rust del Plus (ronda honesta, montos,
+  serial revelado a cero y prueba alterada).
 
 Ver `test/README.md` para los comandos.

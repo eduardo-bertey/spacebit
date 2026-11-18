@@ -31,3 +31,25 @@ jobs:
           name: rust-tests-win
           path: create/target/x86_64-pc-windows-gnu/debug/build/matrict_rust_app/*/out/*.exe
           if-no-files-found: error
+
+  plus_test:
+    name: Compilar tests Rust del Plus para Windows
+    runs-on: ubuntu-latest
+    env:
+      CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+      - name: Instalar compilador MinGW cruzado
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-mingw-w64-x86-64
+      - name: cargo test --no-run (Plus, target Windows GNU)
+        run: cargo test --no-run --target x86_64-pc-windows-gnu --manifest-path create_plus/Cargo.toml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plus-rust-tests-win
+          path: create_plus/target/x86_64-pc-windows-gnu/debug/build/matrict_plus_app/*/out/*.exe
+          if-no-files-found: error

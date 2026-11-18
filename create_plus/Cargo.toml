@@ -1,0 +1,27 @@
+[package]
+name = "matrict_plus_app"
+version = "0.1.0"
+edition = "2021"
+build = "build.rs"
+description = "App Rust + MatRiCT-Plus embebido por FFI"
+
+[dependencies]
+
+[build-dependencies]
+cc = "1.0"
+
+[lib]
+name = "spacebit_plus"
+path = "src/lib.rs"
+
+[[bin]]
+name = "matrict_plus_app"
+path = "src/main.rs"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+panic = "abort"
+strip = true
+debug = false
