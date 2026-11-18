@@ -51,6 +51,10 @@ int main() {
 
   srand(time(NULL));
 
+  printf("=== AUDITOR / Au ===\n");
+  printf("anillo=%lld  M=%lld  S=%lld  rondas=%d\n", (long long)N_SPENT,
+         (long long)M, (long long)S, NUM_ROUNDS);
+
   for (t = 0; t < NUM_ROUNDS; t++) {
     randombytes(seed, CRYPTO_BYTES);
     fastrandombytes_setseed_prv(seed);
@@ -106,9 +110,26 @@ int main() {
     audit(&l_au, amt_out_au, &out, g_hat, td);
     cycle7 = cpucycles();
 
-    printf("%lld,%lld,%lld,%lld,%lld,%llu,%llu,%llu,%llu,%llu,%llu,%llu\n",
-           cycle2 - cycle1, cycle5 - cycle4, cycle6 - cycle5, cycle3 - cycle2,
-           cycle7 - cycle6, v, l, l_au, amt_out[0], amt_out_au[0], amt_out[1],
-           amt_out_au[1]);
+    printf("\n--- ronda %llu ---\n", (unsigned long long)(t + 1));
+    printf("verificacion : %s (v=%llu)\n", v ? "OK" : "FALLA",
+           (unsigned long long)v);
+    printf("firmante     : real=%llu  observador=%llu  %s\n",
+           (unsigned long long)l, (unsigned long long)l_au,
+           (l == l_au) ? "COINCIDE" : "NO COINCIDE");
+    printf("pago         : real=%llu  observador=%llu  %s\n",
+           (unsigned long long)amt_out[0], (unsigned long long)amt_out_au[0],
+           (amt_out[0] == amt_out_au[0]) ? "COINCIDE" : "NO COINCIDE");
+    printf("vuelto       : real=%llu  observador=%llu  %s\n",
+           (unsigned long long)amt_out[1], (unsigned long long)amt_out_au[1],
+           (amt_out[1] == amt_out_au[1]) ? "COINCIDE" : "NO COINCIDE");
+    printf("ciclos CPU   : setup=%lld  trapdoor=%lld  firmar=%lld  "
+           "verificar=%lld  auditar=%lld\n",
+           cycle2 - cycle1, cycle3 - cycle2, cycle5 - cycle4,
+           cycle6 - cycle5, cycle7 - cycle6);
   }
+
+  printf("\nFin. Presione Enter para salir...\n");
+  fflush(stdout);
+  (void)getchar();
+  return 0;
 }

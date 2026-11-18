@@ -214,5 +214,8 @@ int main(int argc, char **argv) {
   else
     run_round(l, monto, pago, modo, delta, semilla);
 
+  printf("\nFin. Presione Enter para salir...\n");
+  fflush(stdout);
+  (void)getchar();
   return 0;
 }

@@ -149,5 +149,8 @@ int main(int argc, char **argv) {
   }
 
   (void)t;
+  printf("\nFin. Presione Enter para salir...\n");
+  fflush(stdout);
+  (void)getchar();
   return 0;
 }
