@@ -43,3 +43,29 @@ bash test/build/build_plus.sh plus tp1.c plussn_serial_cero.exe zero
 # Rust
 cd create && cargo test
 ```
+
+## Falsificador (rango alto)
+
+`auditor/test_falsificador.c` arma una ronda honesta y lanza N intentos por
+estrategia con valores altos al azar: serial aleatorio, `zc`/`zb` cerca del
+tope de norma, `x` aleatorio, clave ajena y anillo sustituido. Cuenta cuántos
+pasan `verify()`:
+
+```bash
+bash test/build/build.sh auditor test_falsificador.c falsificador.exe
+falsificador.exe 200 424242
+```
+
+Para probar anillo 500/1000 usá las variantes que están en `main/`
+(ignoradas por git, no se versionan):
+
+```bash
+bash test/build/build.sh main/trabajados/au_con_parche_y_tests/au500test test_falsificador.c falso500.exe
+bash test/build/build.sh main/trabajados/au_con_parche_y_tests/au1000test test_falsificador.c falso1000.exe
+```
+
+Esperado: `ACEPTADAS=0` en las 6 estrategias. Subir el tope `TG × N/100`
+agranda la región de norma, pero el atacante todavía tiene que cerrar las
+ecuaciones del anillo y el desafío hash; un valor alto al azar por sí solo
+no las cierra. El riesgo real de escalar a 500/1000 es de **soundness** de
+los parámetros (δ ≈ 1.0045 sin reestimar, ver `reportes/`).

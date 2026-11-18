@@ -33,7 +33,7 @@ fi
 mkdir -p "$ROOT/artifacts"
 
 # Todos los main() de prueba y randombytes.c (se usa el RNG portable).
-SKIP='^(randombytes\.c|test\.c|test_firma_falsa\.c|test_l\.c|test_l499\.c|test_multi\.c|test_casos\.c|test_trampas\.c|th_a\.c|th_b\.c|th_c\.c|probe_gadget\.c|probe2\.c|tp1\.c|keygen_zero\.c)$'
+SKIP='^(randombytes\.c|test\.c|test_firma_falsa\.c|test_falsificador\.c|test_l\.c|test_l499\.c|test_multi\.c|test_casos\.c|test_trampas\.c|th_a\.c|th_b\.c|th_c\.c|probe_gadget\.c|probe2\.c|tp1\.c|keygen_zero\.c)$'
 IFS=',' read -ra EXTRA_SKIP <<< "${SKIP_EXTRA:-}"
 
 LIB=()
