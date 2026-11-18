@@ -77,7 +77,7 @@ static void armar(uint64_t l, uint64_t monto, uint64_t pago) {
         t2);
 }
 
-static void relleno_aleatorio(SPEND_OUT *o, uint64_t *s) {
+static void relleno_aleatorio(SPEND_OUT *o, POLY_Q *s) {
   uint64_t i, j;
   for (i = 0; i < N_HAT; i++)
     for (j = 0; j < D; j++) {
