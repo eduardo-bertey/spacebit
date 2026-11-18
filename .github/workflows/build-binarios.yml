@@ -1,0 +1,62 @@
+name: Compilar binarios (solo build, sin ejecutar tests)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Dos variantes: auditor y plus. Un .exe por variante.
+# Toda la logica de compilacion esta en un solo script: test/build/build.sh
+jobs:
+  auditor:
+    name: Auditor - compilar
+    runs-on: windows-latest
+    env:
+      SRC: auditor
+      MAIN: test.c
+      OUT: auditor.exe
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+      - name: Compilar auditor.exe
+        run: bash test/build/build.sh "$SRC" "$MAIN" "$OUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: auditor-binario
+          path: artifacts/auditor.exe
+          if-no-files-found: error
+
+  plus:
+    name: Plus - compilar
+    runs-on: windows-latest
+    env:
+      SRC: plus
+      MAIN: test.c
+      OUT: plus.exe
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
+      - name: Compilar plus.exe
+        run: bash test/build/build.sh "$SRC" "$MAIN" "$OUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: plus-binario
+          path: artifacts/plus.exe
+          if-no-files-found: error

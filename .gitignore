@@ -1,0 +1,9 @@
+artifacts/
+target/
+*.o
+*.a
+*.exe
+
+# Si volves a bajar el paquete completo, main/ no se versiona:
+# las fuentes que se usan ya estan en auditor/ y plus/.
+main/

@@ -1,0 +1,32 @@
+name: Compilar Rust (solo build, sin ejecutar tests)
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rust:
+    name: MatRiCT-Au Rust - compilar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      # build.rs compila los fuentes C con cc: no hace falta libmatrict_au.a
+      # ni -lXKCP. No se ejecuta ningun test: solo se compila.
+      - name: cargo build --release
+        run: cargo build --release --manifest-path create/Cargo.toml
+
+      - name: Listar (NO ejecutar) el binario
+        run: ls -lh create/target/release/matrict_rust_app
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rust-binarios
+          path: create/target/release/matrict_rust_app
+          if-no-files-found: error
