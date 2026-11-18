@@ -7,7 +7,9 @@
 
 #define M 2LL
 #define S 2LL
+#ifndef N_SPENT
 #define N_SPENT 50LL
+#endif
 #define W 44LL
 #define WA 39LL
 #define N 4LL
