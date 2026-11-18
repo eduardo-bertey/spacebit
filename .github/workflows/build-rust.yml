@@ -10,23 +10,35 @@ permissions:
 
 jobs:
   rust:
-    name: MatRiCT-Au Rust - compilar
-    runs-on: ubuntu-latest
+    name: MatRiCT-Au Rust - compilar .exe
+    runs-on: windows-latest
+    env:
+      CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc
+    defaults:
+      run:
+        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dtolnay/rust-toolchain@stable
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: mingw-w64-x86_64-gcc
 
-      # build.rs compila los fuentes C con cc: no hace falta libmatrict_au.a
-      # ni -lXKCP. No se ejecuta ningun test: solo se compila.
-      - name: cargo build --release
-        run: cargo build --release --manifest-path create/Cargo.toml
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-pc-windows-gnu
+
+      # build.rs compila los C con cc. No se ejecuta ningun test.
+      - name: cargo build --release (target GNU)
+        run: cargo build --release --target x86_64-pc-windows-gnu --manifest-path create/Cargo.toml
 
       - name: Listar (NO ejecutar) el binario
-        run: ls -lh create/target/release/matrict_rust_app
+        run: ls -lh create/target/x86_64-pc-windows-gnu/release/matrict_rust_app.exe
 
       - uses: actions/upload-artifact@v4
         with:
-          name: rust-binarios
-          path: create/target/release/matrict_rust_app
+          name: rust-binario
+          path: create/target/x86_64-pc-windows-gnu/release/matrict_rust_app.exe
           if-no-files-found: error
