@@ -7,6 +7,7 @@
 #include <time.h>
 
 #include "audit.h"
+#include "cpucycles.h"
 #include "fastrandombytes.h"
 #include "gentdrow.h"
 #include "keygen.h"

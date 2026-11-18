@@ -6,6 +6,7 @@
 #include <string.h>
 #include <time.h>
 
+#include "cpucycles.h"
 #include "fastrandombytes.h"
 #include "keygen.h"
 #include "mint.h"
