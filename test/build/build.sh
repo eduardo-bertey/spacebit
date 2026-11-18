@@ -59,9 +59,10 @@ if [ -n "${EXTRA_SRC:-}" ]; then
 fi
 
 echo "==> $OUT  (fuentes: $SRC, main: $MAIN_REL)"
-gcc -O2 -maes -static \
-  -I "$SRC" -I "$ROOT/test" \
+gcc -O2 -maes -mavx2 -static \
+  -I "$SRC" -I "$ROOT/test" -I "$ROOT/create/native/include" \
   "$@" \
   "$MAIN" "${LIB[@]}" "${EXTRA[@]}" \
+  "$ROOT/create/native/shake256.c" \
   "$ROOT/test/randombytes_portable.c" \
   -o "$ROOT/artifacts/$OUT" -lm
