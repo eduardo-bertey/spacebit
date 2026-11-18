@@ -18,10 +18,20 @@ uint64_t check_gnorm(POLY_Q *g_norm, const POLY_Q *f00, const POLY_Q *f0,
 
   int64_t i, j;
 
-  tg.coeff[0] = TG_COEFF_0;
-  tg.coeff[1] = TG_COEFF_1;
-  tg.coeff[2] = TG_COEFF_2;
-  tg.coeff[3] = TG_COEFF_3;
+  /* Escalado automatico: TG base (100 llaves) por N_SPENT/100 */
+  {
+    unsigned __int128 acarreo = 0;
+    uint64_t base[4] = {TG_COEFF_0, TG_COEFF_1, TG_COEFF_2, TG_COEFF_3};
+    uint64_t factor = (uint64_t)N_SPENT / 100ULL;
+    int q;
+    if (!factor)
+      factor = 1;
+    for (q = 0; q < 4; q++) {
+      unsigned __int128 p = (unsigned __int128)base[q] * factor + acarreo;
+      tg.coeff[q] = (uint64_t)p;
+      acarreo = p >> 64;
+    }
+  }
 
   norm.coeff[0] = 0;
   norm.coeff[1] = 0;

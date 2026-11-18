@@ -50,22 +50,10 @@
 
 #define F00_NORM (BA * BA * D * (BETA - 1))
 
-/* TG escalado por cantidad de llaves (valores de main/trabajados/au_con_parche_y_tests).
- * Se selecciona solo segun BETA; asi 500/1000 llaves pueden firmar. */
+/* TG base para 100 llaves (valor de fabrica). gnorm.c lo escala por N/100. */
 #define TG_COEFF_0 0
-#if BETA == 100LL
 #define TG_COEFF_1 2365587456
 #define TG_COEFF_2 1001492
-#elif BETA == 500LL
-#define TG_COEFF_1 3238002688
-#define TG_COEFF_2 5007462
-#elif BETA == 1000LL
-#define TG_COEFF_1 2181038080
-#define TG_COEFF_2 10014925
-#else
-#define TG_COEFF_1 2365587456
-#define TG_COEFF_2 1001492
-#endif
 #define TG_COEFF_3 0
 
 #define BBIG_HAT 63307776LL
