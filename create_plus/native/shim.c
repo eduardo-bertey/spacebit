@@ -116,7 +116,7 @@ int matrict_plus_demo(uint64_t amt0, uint64_t amt1, uint64_t pago,
 
   /* ataque 2: alterar la prueba despues de firmar */
   memcpy(&out_falso, &spend_out, sizeof(SPEND_OUT));
-  out_falso.zc[0].poly[0] += 1;
+  out_falso.z[0].poly[0] += 1;
   *v_falso = verify(a_in, pk_out, cn_out, sn_out, &out_falso, mat1, mat2, mat3,
                     pp);
 
