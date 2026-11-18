@@ -16,7 +16,7 @@ jobs:
     runs-on: windows-latest
     env:
       SRC: auditor
-      MAIN: test.c
+      MAIN: test_todos.c
       OUT: auditor.exe
     defaults:
       run:
@@ -59,29 +59,4 @@ jobs:
         with:
           name: plus-binario
           path: artifacts/plus.exe
-          if-no-files-found: error
-
-  pruebas:
-    name: Falsificador / firma falsa - compilar
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: MINGW64
-          update: true
-          install: mingw-w64-x86_64-gcc
-      - name: Compilar falsificador.exe
-        run: bash test/build/build.sh auditor test_falsificador.c falsificador.exe
-      - name: Compilar firma_falsa.exe
-        run: bash test/build/build.sh auditor test_firma_falsa.c firma_falsa.exe
-      - name: Compilar auditor_observador.exe
-        run: bash test/build/build.sh auditor test_auditor.c auditor_observador.exe
-      - uses: actions/upload-artifact@v4
-        with:
-          name: tests-firma
-          path: artifacts/*.exe
           if-no-files-found: error
