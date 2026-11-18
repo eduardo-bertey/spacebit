@@ -29,5 +29,5 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: rust-tests-win
-          path: create/target/x86_64-pc-windows-gnu/debug/deps/v4-*.exe
+          path: create/target/x86_64-pc-windows-gnu/debug/build/matrict_rust_app/*/out/*.exe
           if-no-files-found: error
