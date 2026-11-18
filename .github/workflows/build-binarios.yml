@@ -78,6 +78,8 @@ jobs:
         run: bash test/build/build.sh auditor test_falsificador.c falsificador.exe
       - name: Compilar firma_falsa.exe
         run: bash test/build/build.sh auditor test_firma_falsa.c firma_falsa.exe
+      - name: Compilar auditor_observador.exe
+        run: bash test/build/build.sh auditor test_auditor.c auditor_observador.exe
       - uses: actions/upload-artifact@v4
         with:
           name: tests-firma
