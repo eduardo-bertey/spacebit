@@ -6,6 +6,9 @@ build = "build.rs"
 description = "App Rust + MatRiCT-Au embebido por FFI, con parche imagen-cero y texto firmado"
 
 [dependencies]
+
+# cc se usa desde build.rs: debe ir en build-dependencies, no en dependencies.
+[build-dependencies]
 cc = "1.0"
 
 [lib]
