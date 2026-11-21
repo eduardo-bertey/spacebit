@@ -1,0 +1,61 @@
+name: Seguridad (estimacion + auditoria)
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  auditoria:
+    name: Auditoria de parametros y parches
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Auditar parametros
+        run: python security/audit_config.py
+      - name: Publicar en el resumen
+        run: |
+          echo "## Auditoria de parametros" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat security/audit_report.json >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seguridad-auditoria
+          path: security/audit_report.json
+          if-no-files-found: error
+
+  estimacion:
+    name: Estimacion MSIS (max 60 min)
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Estimar Plus (parametros publicados)
+        run: python security/estimate.py plus
+      - name: Estimar Au (aproximado)
+        run: python security/estimate.py au
+      - name: Publicar en el resumen
+        run: |
+          echo "## Estimacion MSIS" >> $GITHUB_STEP_SUMMARY
+          for f in security/estimate_*.json; do
+            echo "### $f" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            cat "$f" >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: seguridad-estimacion
+          path: security/estimate_*.json
+          if-no-files-found: error

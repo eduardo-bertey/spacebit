@@ -7,39 +7,53 @@ auditor/    fuentes C del Au con el parche imagen-cero y sus tests
 plus/       fuentes C del Plus (BG_0 = 37162531*N/50) y tests del serial
 create/     app Rust que embebe al Au por FFI (con sus propios native/)
 create_plus/ app Rust que embebe al Plus por FFI (shim + tests)
+security/   auditoria de parametros + estimacion MSIS (scripts y README)
 reportes/   informes
-test/       build.sh + RNG portable
-.github/    workflows: solo compilan, no ejecutan tests
+test/       build.sh + RNG portable + tests de falsificacion
+.github/    workflows: build (C/Rust) + seguridad
 ```
 
 Dos variantes nomas: **auditor** y **plus**. Un `.exe` por variante.
 
-## Parches
+## Seguridad (resumen)
 
-- Imagen cero: `verify()` rechaza serial todo cero (auditor y
-  `create/native/au_src/verify.c`).
-- Texto firmado: `matrict_set_extra()` en el `hash.c` de `create/native/`,
-  cambiar el texto entre `spend` y `verify` rompe la prueba.
-- RNG portable para Windows (`test/randombytes_portable.c`).
-- `create/build.rs` compila los C con `cc` y SHAKE-256 local (sin `-lXKCP`).
+Los esquemas vienen de **MatRiCT** (IEEE S&P 2022), basados en **retículos
+(module-SIS / module-LWE)**, post-cuánticos. El secreto no es de 256 bits:
+es un vector de coeficientes ternarios `{-1,0,1}` (~3855 bits en Au, ~3246
+en Plus); los 256 bits son el seed AES-256 y el serial/hash.
+
+| | Au | Plus |
+|---|---|---|
+| `d` | 64 | 256 |
+| `q` | 2147221513 | 3489661057 |
+| clave | 38×64 coef. | 8×256 coef. |
+| tope escalado | `TG × N/100` | `BG_0 = 37162531 × N/50` |
+
+Parches: serial cero rechazado en `verify.c`, texto firmado dentro del hash,
+topes que escalan solos, y RNG portable para Windows.
+
+Detalle completo en `security/README.md`.
 
 ## Workflows
 
-- `build-binarios.yml`: `auditor.exe` y `plus.exe` (MSYS2/MinGW), subidos
-  como artifacts separados.
-- `build-rust.yml`: `cargo build --release` en `create/` y `create_plus/`, sube
-  `rust-binario` y `plus-rust-binario`.
-- `test-rust.yml`: manual; compila los `.exe` de test de ambos crates
-  (`rust-tests-win` y `plus-rust-tests-win`) sin ejecutarlos en la nube.
+- `build-binarios.yml`: compila `auditor.exe`, `plus.exe` y los tests de
+  1000 llaves / falsificación (MSYS2/MinGW). No ejecuta tests.
+- `build-rust.yml`: `cargo build --release` en `create/` y `create_plus/`.
+- `test-rust.yml`: manual; compila los `.exe` de test de ambos crates.
+- `security.yml`: auditoría de parámetros + estimación MSIS con los scripts
+  de `main/`. Publica resultados como artifact y en el resumen del job.
+  Cada job tiene `timeout-minutes: 60`.
 
 ## Tests
 
-- `auditor/test_firma_falsa.c`: modos honesto, pago falso, fuera de rango,
-  clave falsa, barrido de montos y monto falso.
+- `auditor/test_todos.c`: 4 pruebas del Au en un exe (honesta/auditoría,
+  firma falsa, falsificador, observador).
+- `auditor/test_falsificador.c`, `auditor/test_firma_falsa.c`,
+  `auditor/test_auditor.c`: fuentes de esas pruebas.
+- `test/falsificacion_rango_alto.c`: valores ×10 a ×1000 del recomendado.
+- `test/falsificacion_agresiva.c`: bordes de norma, serial ajeno, anillo
+  sustituido y prueba armada desde cero.
 - `plus/`: `test.c`, `tp1.c`, `keygen_zero.c`.
-- `create/tests/v4.rs`: tests Rust del Au (ronda, auditoría, montos, texto
-  alterado, serial cero, firma falsa y firmante fuera del anillo).
-- `create_plus/tests/plus.rs`: tests Rust del Plus (ronda honesta, montos,
-  serial revelado a cero y prueba alterada).
+- `create/tests/v4.rs` (6 tests) y `create_plus/tests/plus.rs` (3 tests).
 
-Ver `test/README.md` para los comandos.
+Ver `test/README.md` y `security/README.md`.

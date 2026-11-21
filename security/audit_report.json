@@ -1,0 +1,61 @@
+{
+  "checks": [
+    {
+      "check": "entropia_clave_Au",
+      "ok": true,
+      "detail": "2432 coef. ternarios = 3855 bits"
+    },
+    {
+      "check": "entropia_clave_Plus",
+      "ok": true,
+      "detail": "8 x 256 coef. ternarios = 3246 bits"
+    },
+    {
+      "check": "parche_serial_cero",
+      "ok": true,
+      "detail": "verify.c rechaza imagen toda cero"
+    },
+    {
+      "check": "parche_serial_cero_rust",
+      "ok": true,
+      "detail": "verify.c del crate Rust rechaza imagen cero"
+    },
+    {
+      "check": "texto_firmado",
+      "ok": true,
+      "detail": "hash.c mezcla texto extra en el desafio"
+    },
+    {
+      "check": "TG_escala_N",
+      "ok": true,
+      "detail": "TG/N = 1.8474e+23 (referencia 1.8474e23)"
+    },
+    {
+      "check": "TG_base_100_coincide_con_main",
+      "ok": true,
+      "detail": "(2365587456, 1001492) vs main (2365587456, 1001492)"
+    },
+    {
+      "check": "BG_0_formula",
+      "ok": true,
+      "detail": "BG_0 = (37162531LL * N_SPENT / 50LL)"
+    },
+    {
+      "check": "BG_0_N50",
+      "ok": true,
+      "detail": "N=50 -> BG_0=37162531"
+    },
+    {
+      "check": "BG_0_N500",
+      "ok": true,
+      "detail": "N=500 -> BG_0=371625310"
+    },
+    {
+      "check": "BG_0_N1000",
+      "ok": true,
+      "detail": "N=1000 -> BG_0=743250620"
+    }
+  ],
+  "passed": 11,
+  "total": 11
+}
