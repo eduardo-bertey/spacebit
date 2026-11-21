@@ -1,0 +1,38 @@
+{
+  "scheme": "plus",
+  "nota": "parametros publicados MatRiCT+ (paper IEEE S&P 2022)",
+  "log2_q": 31.7,
+  "d": 256,
+  "bounds_log2": [
+    30.3,
+    27.56,
+    22.64,
+    19.92,
+    16.6
+  ],
+  "results": [
+    {
+      "variant": 0,
+      "dim": 2581,
+      "bkz_block": 310,
+      "rhf": 1.00474,
+      "cost_bits": 83.79
+    },
+    {
+      "variant": 1,
+      "dim": 2231,
+      "bkz_block": 360,
+      "rhf": 1.00428,
+      "cost_bits": 95.49
+    },
+    {
+      "variant": 2,
+      "dim": 2131,
+      "bkz_block": 360,
+      "rhf": 1.00428,
+      "cost_bits": 95.49
+    }
+  ],
+  "segundos": 126.6,
+  "error": null
+}

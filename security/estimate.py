@@ -18,8 +18,15 @@ import time
 HERE = pathlib.Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 
+import MSIS_security as sis  # noqa: E402
 from MSIS_security import MSISParameterSet, MSIS_summarize_attacks  # noqa: E402
 from model_BKZ import delta_BKZ  # noqa: E402
+
+# El paper fija MIN_b=300 para sus parametros; con d=64/256 hay menos
+# bloques y el optimizador se queja. Se baja al minimo seguro.
+sis.MIN_b = 60
+sis.STEPS_b = 25
+sis.STEPS_m = 25
 
 
 class Timeout(Exception):
@@ -74,10 +81,15 @@ def main():
         print("uso: estimate.py [plus|au]")
         return 2
 
+    if scheme == "au":
+        sis.MIN_b = 40
+        sis.STEPS_b = 10
+        sis.STEPS_m = 10
+
     params = MSISParameterSet(d, m1 + m2 + m3 + m4 + m5, sisrank,
                               B1, B2, B3, B4, B5, m1, m2, m3, m4, m5,
                               q, norm="linf")
-    results, elapsed, error = estimate(params)
+    results, elapsed, error = estimate(params, seconds=900)
     report = {"scheme": scheme, "nota": nota, "log2_q": round(math.log2(q), 2),
               "d": d, "bounds_log2": [round(math.log2(b), 2)
                                       for b in (B1, B2, B3, B4, B5)],

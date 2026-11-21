@@ -1,0 +1,38 @@
+{
+  "scheme": "au",
+  "nota": "APROXIMADO: cotas del codigo Au, no estimacion oficial del paper",
+  "log2_q": 31.0,
+  "d": 64,
+  "bounds_log2": [
+    25.92,
+    22.32,
+    16.58,
+    13.32,
+    13.32
+  ],
+  "results": [
+    {
+      "variant": 0,
+      "dim": 189,
+      "bkz_block": 40,
+      "rhf": 1.01254,
+      "cost_bits": 10.61
+    },
+    {
+      "variant": 1,
+      "dim": 189,
+      "bkz_block": 40,
+      "rhf": 1.01254,
+      "cost_bits": 10.61
+    },
+    {
+      "variant": 2,
+      "dim": 179,
+      "bkz_block": 40,
+      "rhf": 1.01254,
+      "cost_bits": 10.61
+    }
+  ],
+  "segundos": 0.1,
+  "error": null
+}
