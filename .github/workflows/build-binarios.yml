@@ -82,6 +82,8 @@ jobs:
         run: bash test/build/build.sh auditor test/falsificacion_rango_alto.c falsificacion_rango_alto.exe
       - name: falsificacion_agresiva.exe (anillo 100)
         run: bash test/build/build.sh auditor test/falsificacion_agresiva.c falsificacion_agresiva.exe
+      - name: au_d256_intento.exe
+        run: bash test/build/build.sh auditor test/au_d256_intento.c au_d256_intento.exe -DD=256
       - uses: actions/upload-artifact@v4
         with:
           name: mil-llaves
@@ -89,4 +91,5 @@ jobs:
             artifacts/*_1k.exe
             artifacts/falsificacion_rango_alto.exe
             artifacts/falsificacion_agresiva.exe
+            artifacts/au_d256_intento.exe
           if-no-files-found: error
